@@ -1,0 +1,42 @@
+  Scenario: Successful deployment of the application
+    Given the application is packaged
+    When we deploy the application to "staging"
+    Then the deployment should be successful
+    And the application should respond to health checks
+#steps/deployment_steps.py (Behave Step Definitions)
+from behave import given, when, then
+import subprocess
+import time
+
+@given("the application is packaged")
+def step_packaged_app(context):
+    # Simulate packaging
+    context.app_path = "./build/myapp.tar.gz"
+    print(f"Packaging application to {context.app_path}")
+    # You could add real packaging logic here
+    # For demo: simulate file creation
+    open(context.app_path, "w").close()
+
+@when('we deploy the application to "{env}"')
+def step_deploy_app(context, env):
+    # Simulate a deployment step
+    print(f"Deploying to {env}...")
+    result = subprocess.run(["echo", f"Deploying to {env}"], capture_output=True)
+    context.deploy_output = result.stdout.decode().strip()
+    context.deploy_status = result.returncode
+
+@then("the deployment should be successful")
+def step_deployment_success(context):
+    assert context.deploy_status == 0, "Deployment failed"
+    print("Deployment completed successfully.")
+
+@then("the application should respond to health checks")
+def step_health_check(context):
+    # Simulate health check
+    print("Pinging health check endpoint...")
+    time.sleep(1)
+    response_status = 200  # Simulate HTTP 200 OK
+    assert response_status == 200, "Health check failed"
+
+🧪 To Run the Test
+behave features/deployment.feature
