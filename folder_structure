@@ -1,0 +1,5 @@
+project-root/
+├── features/
+│   ├── deployment.feature
+│   └── steps/
+│       └── deployment_steps.py
